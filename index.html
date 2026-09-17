@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TENSE LAB — Right Tense, Right Move</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e1a2b;
+    --paper: #f0ece4;
+    --paper-2: #e5e0d4;
+    --cream: #f4f1ea;
+    --indigo: #2d3e87;
+    --indigo-dark: #1a2761;
+    --teal: #2a8c8a;
+    --gold: #b8842a;
+    --ok: #1f6b3a;
+    --warn: #b8741a;
+    --muted: #5a564d;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter Tight', sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(rgba(45, 62, 135, 0.05) 1px, transparent 1px);
+    background-size: 4px 4px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 28px 32px 80px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Top bar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .topbar .live {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--indigo);
+    font-weight: 500;
+  }
+  .topbar .dot {
+    width: 8px; height: 8px;
+    background: var(--indigo);
+    border-radius: 50%;
+    animation: pulse 1.8s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  /* Masthead */
+  .masthead {
+    padding: 32px 0 24px;
+    border-bottom: 6px double var(--ink);
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .masthead .kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .masthead h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: clamp(44px, 6.5vw, 76px);
+    line-height: 0.95;
+    margin: 0 0 16px;
+    letter-spacing: -0.02em;
+  }
+  .masthead h1 em {
+    font-style: italic;
+    color: var(--indigo);
+    font-weight: 700;
+  }
+  .masthead .standfirst {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--muted);
+    max-width: 720px;
+    line-height: 1.45;
+  }
+  .masthead .glyph {
+    position: absolute;
+    right: -10px;
+    top: 24px;
+    font-family: 'Fraunces', serif;
+    font-size: 110px;
+    font-style: italic;
+    color: var(--indigo);
+    opacity: 0.07;
+    pointer-events: none;
+  }
+
+  /* Sections */
+  .section { margin: 36px 0; }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 8px;
+  }
+  .section-head .num {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 4px 8px;
+    letter-spacing: 0.15em;
+  }
+  .section-head h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 28px;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .section-head .meta {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+  }
+
+  /* Briefing */
+  .briefing {
+    background: var(--paper-2);
+    border-left: 4px solid var(--indigo);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+  .briefing p { margin: 0 0 10px; }
+  .briefing p:last-child { margin-bottom: 0; }
+  .briefing strong { font-weight: 600; }
+
+  /* Four-move map with tenses */
+  .move-map {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid var(--ink);
+    margin: 18px 0 8px;
+    background: #fff;
+  }
+  .move-map .cell {
+    padding: 16px 14px;
+    border-right: 1px solid var(--ink);
+    position: relative;
+  }
+  .move-map .cell:last-child { border-right: none; }
+  .move-map .arrow {
+    position: absolute;
+    right: -9px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--paper);
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+  }
+  .move-map .cell:last-child .arrow { display: none; }
+  .move-map .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--indigo);
+    margin-bottom: 6px;
+  }
+  .move-map h4 {
+    font-family: 'Fraunces', serif;
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .move-map .tense-chip {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 3px 6px;
+    background: var(--ink);
+    color: var(--paper);
+    margin: 2px 2px 4px 0;
+    letter-spacing: 0.05em;
+  }
+  .move-map p {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 6px 0 0;
+    line-height: 1.4;
+    font-style: italic;
+  }
+
+  /* Tense reference cards */
+  .tense-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 12px;
+    margin: 18px 0;
+  }
+  .tense-card {
+    border: 1px solid var(--ink);
+    background: #fff;
+    padding: 16px 18px;
+  }
+  .tense-card .name {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--indigo);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .tense-card h5 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    margin: 0 0 8px;
+    font-weight: 700;
+  }
+  .tense-card .ex {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink);
+    padding: 10px 12px;
+    background: var(--cream);
+    border-left: 2px solid var(--indigo);
+    margin-top: 8px;
+  }
+  .tense-card .note {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0;
+  }
+  .tense-card .note b {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* Scoreboard */
+  .scoreboard {
+    position: sticky;
+    top: 12px;
+    z-index: 5;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .scoreboard .ticker {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .scoreboard .score-num {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 700;
+  }
+  .scoreboard .progress {
+    flex: 1;
+    min-width: 140px;
+    height: 6px;
+    background: rgba(255,255,255,0.15);
+    overflow: hidden;
+  }
+  .scoreboard .progress-bar {
+    height: 100%;
+    background: var(--gold);
+    width: 0;
+    transition: width 0.4s ease;
+  }
+  .scoreboard .small {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    opacity: 0.75;
+  }
+
+  /* Drills */
+  .drill {
+    border: 1px solid var(--ink);
+    background: #fff;
+    padding: 22px 24px;
+    margin-bottom: 18px;
+  }
+  .drill-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed rgba(0,0,0,0.2);
+    flex-wrap: wrap;
+  }
+  .drill-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3px 7px;
+    letter-spacing: 0.12em;
+  }
+  .drill-slug {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .drill-status {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border: 1px solid var(--muted);
+    color: var(--muted);
+  }
+  .drill-status.ok {
+    border-color: var(--ok);
+    color: var(--ok);
+    background: rgba(31,107,58,0.08);
+  }
+  .drill-status.bad {
+    border-color: var(--warn);
+    color: var(--warn);
+    background: rgba(184,116,26,0.08);
+  }
+
+  .source-line {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    line-height: 1.55;
+    margin: 6px 0 16px;
+    padding: 14px 16px;
+    background: var(--paper-2);
+    border-left: 3px solid var(--indigo);
+  }
+
+  /* Drill A: option buttons */
+  .options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin: 14px 0 4px;
+  }
+  .opt {
+    padding: 10px 14px;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    text-align: left;
+    transition: all 0.12s;
+  }
+  .opt:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .opt.selected {
+    background: var(--indigo);
+    color: #fff;
+    border-color: var(--indigo);
+  }
+  .opt.correct {
+    background: var(--ok);
+    color: #fff;
+    border-color: var(--ok);
+  }
+  .opt.wrong {
+    background: rgba(184,116,26,0.18);
+    border-color: var(--warn);
+    color: var(--warn);
+  }
+
+  /* Drill B: gap-fill inputs inline */
+  .source-line input {
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    padding: 6px 10px;
+    border: none;
+    border-bottom: 2px solid var(--indigo);
+    background: rgba(255,255,255,0.6);
+    min-width: 140px;
+    outline: none;
+    color: var(--indigo-dark);
+    font-weight: 600;
+  }
+  .source-line input:focus {
+    background: #fff;
+    border-bottom-color: var(--gold);
+  }
+
+  .hint {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin: 10px 0;
+    letter-spacing: 0.05em;
+  }
+  .hint b {
+    color: var(--ink);
+    background: rgba(45, 62, 135, 0.13);
+    padding: 1px 5px;
+  }
+
+  .drill-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  button {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  button:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  button.primary {
+    background: var(--indigo);
+    border-color: var(--indigo);
+    color: #fff;
+  }
+  button.primary:hover {
+    background: var(--indigo-dark);
+    border-color: var(--indigo-dark);
+  }
+  button.ghost {
+    border-color: var(--muted);
+    color: var(--muted);
+  }
+
+  .feedback {
+    margin-top: 14px;
+    padding: 14px 16px;
+    font-size: 14px;
+    line-height: 1.55;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok {
+    background: rgba(31,107,58,0.08);
+    border-left: 3px solid var(--ok);
+  }
+  .feedback.bad {
+    background: rgba(184,116,26,0.08);
+    border-left: 3px solid var(--warn);
+  }
+  .feedback .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .feedback.ok .label { color: var(--ok); }
+  .feedback.bad .label { color: var(--warn); }
+  .feedback .model {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 15px;
+    margin: 8px 0;
+    padding: 10px 12px;
+    background: rgba(45, 62, 135, 0.06);
+    border-left: 2px solid var(--indigo);
+  }
+  .note { font-size: 13px; color: var(--muted); }
+
+  textarea {
+    width: 100%;
+    min-height: 70px;
+    padding: 12px 14px;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    resize: vertical;
+    outline: none;
+  }
+  textarea:focus {
+    background: #fff;
+    border-color: var(--indigo);
+  }
+
+  /* Final */
+  .final {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 28px 30px;
+    margin-top: 40px;
+    position: relative;
+  }
+  .final::before {
+    content: "FINAL ASSIGNMENT // RIGHT TENSE, RIGHT MOVE";
+    position: absolute;
+    top: -10px;
+    left: 24px;
+    background: var(--gold);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    padding: 4px 10px;
+  }
+  .final h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    margin: 10px 0 12px;
+    font-weight: 700;
+  }
+  .final p { line-height: 1.6; }
+  .final .brief {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 18px 20px;
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 16px 0;
+  }
+  .final .brief h5 {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--indigo);
+    margin: 0 0 8px;
+    text-transform: uppercase;
+  }
+  .final .brief ul { margin: 0; padding-left: 18px; }
+  .final .brief li { margin-bottom: 4px; }
+  .final-grid {
+    display: grid;
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .final-block {
+    background: rgba(255,255,255,0.05);
+    padding: 14px 16px;
+    border-left: 3px solid var(--indigo);
+  }
+  .final-block.b2 { border-left-color: var(--teal); }
+  .final-block.b3 { border-left-color: var(--gold); }
+  .final-block.b4 { border-left-color: var(--indigo-dark); }
+  .final-block .move-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 4px;
+  }
+  .final-block h4 {
+    font-family: 'Fraunces', serif;
+    margin: 0 0 4px;
+    font-size: 18px;
+  }
+  .final-block .req {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 8px;
+  }
+  .final textarea {
+    background: var(--paper);
+    border-color: var(--paper);
+    min-height: 80px;
+    color: var(--ink);
+  }
+  .final button {
+    background: var(--gold);
+    color: var(--ink);
+    border-color: var(--gold);
+  }
+  .final button:hover {
+    background: #fff;
+    color: var(--ink);
+    border-color: #fff;
+  }
+
+  footer {
+    margin-top: 60px;
+    padding-top: 18px;
+    border-top: 1px solid var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  @media (max-width: 720px) {
+    .container { padding: 18px 18px 60px; }
+    .move-map { grid-template-columns: 1fr 1fr; }
+    .move-map .cell { border-right: none; border-bottom: 1px solid var(--ink); }
+    .move-map .cell:nth-child(odd) { border-right: 1px solid var(--ink); }
+    .move-map .arrow { display: none; }
+    .section-head { flex-wrap: wrap; }
+    .section-head .meta { width: 100%; margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="topbar">
+    <div><span class="live"><span class="dot"></span>TENSE LAB</span> &nbsp;//&nbsp; WEBSITE WRITING DESK · ED.01</div>
+    <div id="clock">--:--:--</div>
+  </div>
+
+  <header class="masthead">
+    <div class="glyph">tense.</div>
+    <div class="kicker">Writing Lab · For NSLWs · D4 English for Business & Professional Communication</div>
+    <h1>Right <em>Tense,</em><br>Right <em>Move.</em></h1>
+    <p class="standfirst">Each of the four moves in sustainability writing on a company website calls for a different tense. Pick the wrong one and the message loses credibility. Pick the right one and the story works.</p>
+  </header>
+
+  <div class="scoreboard">
+    <span class="ticker">▸ Tense Desk</span>
+    <span class="score-num" id="scoreText">0 / 10</span>
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+    <span class="small" id="statusText">Awaiting first answer…</span>
+  </div>
+
+  <!-- SECTION 01: BRIEFING -->
+  <section class="section">
+    <div class="section-head">
+      <span class="num">01</span>
+      <h2>The Four-Move Map</h2>
+      <span class="meta">Read first · 3 min</span>
+    </div>
+
+    <div class="briefing">
+      <p>When a company writes about its sustainability work on its own <strong>website</strong>, the writing usually follows four moves. The moves can appear in one article or across several pages (e.g. About Us, Sustainability Overview, Newsroom).</p>
+      <p>Each move does a different job — so each move calls for a different tense. <strong>Picking the wrong tense weakens the company's credibility. Picking the right one makes the message clear and trustworthy.</strong></p>
+    </div>
+
+    <div class="move-map">
+      <div class="cell">
+        <div class="tag">Move 01 · Plan</div>
+        <h4>What we aim to do</h4>
+        <span class="tense-chip">simple present</span>
+        <span class="tense-chip">future</span>
+        <p>Measurable targets and target year.</p>
+        <div class="arrow">→</div>
+      </div>
+      <div class="cell">
+        <div class="tag">Move 02 · Results</div>
+        <h4>What we have achieved</h4>
+        <span class="tense-chip">present perfect</span>
+        <span class="tense-chip">pres. perf. cont.</span>
+        <p>Achievements with numbers.</p>
+        <div class="arrow">→</div>
+      </div>
+      <div class="cell">
+        <div class="tag">Move 03 · Actions</div>
+        <h4>What we are doing now</h4>
+        <span class="tense-chip">present continuous</span>
+        <span class="tense-chip">simple past</span>
+        <p>Concrete, show-not-tell.</p>
+        <div class="arrow">→</div>
+      </div>
+      <div class="cell">
+        <div class="tag">Move 04 · Future</div>
+        <h4>What we will do next</h4>
+        <span class="tense-chip">future</span>
+        <p>Follow-up actions and target years.</p>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Fraunces',serif; font-size: 22px; margin: 28px 0 10px;">Tense Reference Card</h3>
+
+    <div class="tense-grid">
+      <div class="tense-card">
+        <div class="name">Simple Present</div>
+        <h5>Describes who the company is</h5>
+        <p class="note">Builds credibility. Used in the <b>PLAN</b> move.</p>
+        <div class="ex">"Our company operates in 30 countries and aims to reach net zero by 2050."</div>
+      </div>
+      <div class="tense-card">
+        <div class="name">Present Perfect</div>
+        <h5>Shows results so far</h5>
+        <p class="note">Used in the <b>RESULTS</b> move with numbers.</p>
+        <div class="ex">"We have reduced water use by 30 percent since 2020."</div>
+      </div>
+      <div class="tense-card">
+        <div class="name">Present Perfect Continuous</div>
+        <h5>Ongoing achievement over time</h5>
+        <p class="note">Used in <b>RESULTS</b> with duration.</p>
+        <div class="ex">"We have been investing in renewable energy for ten years."</div>
+      </div>
+      <div class="tense-card">
+        <div class="name">Present Continuous</div>
+        <h5>Action happening now</h5>
+        <p class="note">Used in <b>PAST/CURRENT ACTIONS</b>.</p>
+        <div class="ex">"Our teams are working with local farmers in East Java."</div>
+      </div>
+      <div class="tense-card">
+        <div class="name">Simple Past</div>
+        <h5>One completed event in time</h5>
+        <p class="note">Used in <b>PAST/CURRENT ACTIONS</b> for origin stories or specific years.</p>
+        <div class="ex">"In 2018, we launched our first solar plant."</div>
+      </div>
+      <div class="tense-card">
+        <div class="name">Future</div>
+        <h5>What the company will do next</h5>
+        <p class="note">Used in <b>FUTURE ACTIONS</b> and <b>PLAN</b>.</p>
+        <div class="ex">"By 2030, we will plant two million trees across Indonesia."</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 02: DRILL A — SPOT THE MOVE -->
+  <section class="section">
+    <div class="section-head">
+      <span class="num">02</span>
+      <h2>Spot the Move</h2>
+      <span class="meta">5 sentences · the tense is your clue</span>
+    </div>
+    <p style="color: var(--muted); margin-top: -8px;">
+      Read each sentence from a fictional company's website. Which move does it belong to? The tense is your biggest clue.
+    </p>
+    <div id="drillsA"></div>
+  </section>
+
+  <!-- SECTION 03: DRILL B — FILL THE RIGHT TENSE -->
+  <section class="section">
+    <div class="section-head">
+      <span class="num">03</span>
+      <h2>Fill the Right Tense</h2>
+      <span class="meta">5 gaps · type the correct verb form</span>
+    </div>
+    <p style="color: var(--muted); margin-top: -8px;">
+      Each sentence is from a real-style website page. The move is given. Put the verb in parentheses into the correct tense for that move.
+    </p>
+    <div id="drillsB"></div>
+  </section>
+
+  <!-- SECTION 04: FINAL -->
+  <section class="section">
+    <div class="section-head">
+      <span class="num">04</span>
+      <h2>Website Writing Assignment</h2>
+      <span class="meta">Free-write · four short paragraphs</span>
+    </div>
+
+    <div class="final">
+      <h3>Write a short sustainability story for the website of PT Hijau Nusantara.</h3>
+      <p>Use the brief below to write ONE short paragraph for each of the four moves. Use the right tense in each paragraph.</p>
+
+      <div class="brief">
+        <h5>▸ Company brief — PT Hijau Nusantara (beverage company)</h5>
+        <ul>
+          <li><b>Target (Plan):</b> 100% recyclable packaging by 2030</li>
+          <li><b>Results so far:</b> 65% of packaging is recyclable; 40 million plastic bottles collected since 2021</li>
+          <li><b>Current action:</b> Partnering with 200 waste banks in Java; running consumer return programs</li>
+          <li><b>Next step (Future):</b> Expand to Sumatra and Sulawesi by 2027; launch refill stations in 50 cities</li>
+        </ul>
+      </div>
+
+      <div class="final-grid">
+        <div class="final-block">
+          <div class="move-tag">Move 01 · Plan</div>
+          <h4>What we aim to do</h4>
+          <div class="req">Use simple present and/or future. State the target and the year.</div>
+          <textarea id="m1" placeholder="At PT Hijau Nusantara, we believe…"></textarea>
+        </div>
+        <div class="final-block b2">
+          <div class="move-tag">Move 02 · Results</div>
+          <h4>What we have achieved</h4>
+          <div class="req">Use present perfect. Include the numbers from the brief.</div>
+          <textarea id="m2" placeholder="Since 2021, we have…"></textarea>
+        </div>
+        <div class="final-block b3">
+          <div class="move-tag">Move 03 · Past / Current Actions</div>
+          <h4>What we are doing right now</h4>
+          <div class="req">Use present continuous (and past where helpful). Show, don't tell.</div>
+          <textarea id="m3" placeholder="Today, our teams are partnering with…"></textarea>
+        </div>
+        <div class="final-block b4">
+          <div class="move-tag">Move 04 · Future Actions</div>
+          <h4>What we will do next</h4>
+          <div class="req">Use future. Mention the next regions and the future year.</div>
+          <textarea id="m4" placeholder="By 2027, we will…"></textarea>
+        </div>
+      </div>
+
+      <div class="drill-actions" style="margin-top: 14px;">
+        <button class="primary" onclick="analyzeFinal()">Submit Draft</button>
+        <button class="ghost" onclick="clearFinal()">Clear All</button>
+      </div>
+      <div id="finalFeedback" class="feedback" style="background: var(--paper); color: var(--ink);"></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>TENSE LAB · ED.01</span>
+    <span>For NSLWs · CEFR B1–B2</span>
+    <span id="footerDate"></span>
+  </footer>
+</div>
+
+<script>
+  // ===== DRILL A: SPOT THE MOVE =====
+  const drillsA = [
+    {
+      slug: "ABOUT US PAGE",
+      sentence: "We aim to achieve net-zero carbon emissions across our operations by 2040.",
+      answer: 0,
+      explain: "The verbs <b>aim</b> (simple present) + <b>by 2040</b> (target year) signal a measurable plan — Move 01."
+    },
+    {
+      slug: "SUSTAINABILITY OVERVIEW",
+      sentence: "Since 2019, we have reduced our energy consumption by 28 percent and have planted over 1.5 million trees.",
+      answer: 1,
+      explain: "<b>Have reduced</b> + <b>have planted</b> are present perfect — used to show achievements with numbers. That is Move 02: Results."
+    },
+    {
+      slug: "NEWSROOM ARTICLE",
+      sentence: "Our field teams are working with smallholder coffee farmers in Aceh to introduce climate-resilient farming methods.",
+      answer: 2,
+      explain: "<b>Are working</b> is present continuous — describing an action happening now. This is Move 03: Past/Current Actions."
+    },
+    {
+      slug: "PRESS RELEASE",
+      sentence: "In the next three years, we will open ten new water-refill stations across Sumatra.",
+      answer: 3,
+      explain: "<b>Will open</b> + <b>in the next three years</b> = future tense + future time marker. Move 04: Future Actions."
+    },
+    {
+      slug: "NEWSROOM · IMPACT STORY",
+      sentence: "In 2017, we launched our first community recycling programme in Bandung with five local partners.",
+      answer: 2,
+      explain: "<b>Launched</b> is simple past — used in Move 03 to describe the origin of an action in a specific year."
+    }
+  ];
+
+  const moveLabels = ["Plan", "Results", "Past/Current Actions", "Future Actions"];
+
+  // ===== DRILL B: GAP-FILL =====
+  const drillsB = [
+    {
+      slug: "ABOUT US · PLAN",
+      move: "Plan",
+      tenseHint: "simple present (× 2)",
+      // sentence built as parts; { gap: 'verb' } marks an input
+      parts: [
+        "At GreenLeaf Co., we ",
+        { gap: "believe" },
+        " that sustainable business ",
+        { gap: "be" },
+        " good business."
+      ],
+      accepted: [["believe"], ["is"]],
+      explain: "The plan move uses simple present to describe who the company is and what it values."
+    },
+    {
+      slug: "SUSTAINABILITY OVERVIEW · RESULTS",
+      move: "Results",
+      tenseHint: "present perfect — note 'since 2020'",
+      parts: [
+        "Since 2020, we ",
+        { gap: "reduce" },
+        " our water use by 35 percent across all factories."
+      ],
+      accepted: [["have reduced"]],
+      explain: "<b>Since</b> + a starting year is a strong cue for present perfect. The result continues to be true now."
+    },
+    {
+      slug: "NEWSROOM · CURRENT ACTION",
+      move: "Past/Current Actions",
+      tenseHint: "present continuous — note 'right now'",
+      parts: [
+        "Right now, our engineers ",
+        { gap: "install" },
+        " solar panels at twelve manufacturing sites in Java."
+      ],
+      accepted: [["are installing"]],
+      explain: "<b>Right now</b> + an ongoing action = present continuous. It shows the work as it happens — classic 'show, don't tell'."
+    },
+    {
+      slug: "IMPACT STORY · PAST ACTION",
+      move: "Past/Current Actions",
+      tenseHint: "simple past — one event, one specific year",
+      parts: [
+        "In 2015, we ",
+        { gap: "open" },
+        " our first zero-waste warehouse in Surabaya."
+      ],
+      accepted: [["opened"]],
+      explain: "A single completed event tied to a specific year takes simple past. Used here to mark the start of the sustainability story."
+    },
+    {
+      slug: "FUTURE ACTIONS",
+      move: "Future Actions",
+      tenseHint: "future — 'by 2030' = a future deadline",
+      parts: [
+        "By 2030, we ",
+        { gap: "plant" },
+        " five million mangrove trees along the Indonesian coastline."
+      ],
+      accepted: [["will plant", "are going to plant"]],
+      explain: "<b>By + future year</b> is the standard pattern for the future actions move."
+    }
+  ];
+
+  // ===== RENDER DRILL A =====
+  const containerA = document.getElementById("drillsA");
+  drillsA.forEach((d, i) => {
+    const div = document.createElement("div");
+    div.className = "drill";
+    div.innerHTML = `
+      <div class="drill-head">
+        <span class="drill-num">A-${String(i+1).padStart(2,'0')}</span>
+        <span class="drill-slug">${d.slug}</span>
+        <span class="drill-status" id="status-a-${i}">Pending</span>
+      </div>
+      <div class="source-line">${d.sentence}</div>
+      <div class="options" id="opts-a-${i}">
+        ${moveLabels.map((o, j) =>
+          `<button class="opt" onclick="selectOptA(${i}, ${j})">${String.fromCharCode(65+j)}. ${o}</button>`
+        ).join('')}
+      </div>
+      <div class="drill-actions">
+        <button class="primary" onclick="checkA(${i})">Check</button>
+        <button class="ghost" onclick="resetA(${i})">Reset</button>
+      </div>
+      <div id="fb-a-${i}" class="feedback"></div>
+    `;
+    containerA.appendChild(div);
+  });
+
+  const selectionsA = {};
+  function selectOptA(i, j) {
+    selectionsA[i] = j;
+    document.querySelectorAll(`#opts-a-${i} .opt`).forEach(b => b.classList.remove("selected"));
+    document.querySelectorAll(`#opts-a-${i} .opt`)[j].classList.add("selected");
+  }
+  function checkA(i) {
+    const d = drillsA[i];
+    const pick = selectionsA[i];
+    const fb = document.getElementById(`fb-a-${i}`);
+    const status = document.getElementById(`status-a-${i}`);
+    if (pick === undefined) {
+      fb.className = "feedback show bad";
+      fb.innerHTML = `<span class="label">▸ Empty</span>Choose an option first.`;
+      return;
+    }
+    document.querySelectorAll(`#opts-a-${i} .opt`).forEach((b, idx) => {
+      b.classList.remove("correct", "wrong");
+      if (idx === d.answer) b.classList.add("correct");
+      else if (idx === pick) b.classList.add("wrong");
+    });
+    if (pick === d.answer) {
+      fb.className = "feedback show ok";
+      status.className = "drill-status ok"; status.textContent = "✓ Correct";
+      fb.innerHTML = `<span class="label">▸ Right move</span>${d.explain}`;
+      completed.add(`a-${i}`);
+    } else {
+      fb.className = "feedback show bad";
+      status.className = "drill-status bad"; status.textContent = "✗ Try Again";
+      fb.innerHTML = `<span class="label">▸ Not quite</span>${d.explain}`;
+      completed.delete(`a-${i}`);
+    }
+    updateScore();
+  }
+  function resetA(i) {
+    delete selectionsA[i];
+    document.querySelectorAll(`#opts-a-${i} .opt`).forEach(b =>
+      b.classList.remove("selected", "correct", "wrong"));
+    document.getElementById(`fb-a-${i}`).classList.remove("show");
+    const status = document.getElementById(`status-a-${i}`);
+    status.className = "drill-status"; status.textContent = "Pending";
+    completed.delete(`a-${i}`);
+    updateScore();
+  }
+
+  // ===== RENDER DRILL B =====
+  const containerB = document.getElementById("drillsB");
+  drillsB.forEach((d, i) => {
+    // Build sentence HTML with inline inputs
+    let sentenceHTML = "";
+    let gapIdx = 0;
+    d.parts.forEach(part => {
+      if (typeof part === 'string') {
+        sentenceHTML += part;
+      } else if (part.gap) {
+        sentenceHTML += `<input type="text" id="b-${i}-${gapIdx}" placeholder="(${part.gap})..." data-base="${part.gap}" />`;
+        gapIdx++;
+      }
+    });
+
+    const div = document.createElement("div");
+    div.className = "drill";
+    div.innerHTML = `
+      <div class="drill-head">
+        <span class="drill-num">B-${String(i+1).padStart(2,'0')}</span>
+        <span class="drill-slug">${d.slug}</span>
+        <span class="drill-status" id="status-b-${i}">Pending</span>
+      </div>
+      <div class="source-line">${sentenceHTML}</div>
+      <div class="hint">MOVE: <b>${d.move}</b> · TENSE: <b>${d.tenseHint}</b></div>
+      <div class="drill-actions">
+        <button class="primary" onclick="checkB(${i})">Check</button>
+        <button onclick="showB(${i})">Show Answer</button>
+        <button class="ghost" onclick="resetB(${i})">Reset</button>
+      </div>
+      <div id="fb-b-${i}" class="feedback"></div>
+    `;
+    containerB.appendChild(div);
+  });
+
+  function normalize(s) { return s.toLowerCase().replace(/\s+/g, " ").trim(); }
+
+  function checkB(i) {
+    const d = drillsB[i];
+    const fb = document.getElementById(`fb-b-${i}`);
+    const status = document.getElementById(`status-b-${i}`);
+    const inputs = [];
+    for (let j = 0; j < d.accepted.length; j++) {
+      inputs.push(normalize(document.getElementById(`b-${i}-${j}`).value));
+    }
+    if (inputs.some(v => !v)) {
+      fb.className = "feedback show bad";
+      fb.innerHTML = `<span class="label">▸ Empty</span>Fill in all gaps before checking.`;
+      return;
+    }
+    const allCorrect = d.accepted.every((accSet, j) => accSet.includes(inputs[j]));
+    if (allCorrect) {
+      fb.className = "feedback show ok";
+      status.className = "drill-status ok"; status.textContent = "✓ Correct";
+      fb.innerHTML = `<span class="label">▸ Right tense for the move</span>${d.explain}`;
+      completed.add(`b-${i}`);
+    } else {
+      const wrongs = d.accepted.map((accSet, j) =>
+        accSet.includes(inputs[j]) ? null : { got: inputs[j], want: accSet[0] }
+      ).filter(Boolean);
+      fb.className = "feedback show bad";
+      status.className = "drill-status bad"; status.textContent = "✗ Adjust";
+      fb.innerHTML = `<span class="label">▸ Not quite</span>
+        ${wrongs.map(w => `You wrote "<b>${w.got}</b>" — expected "<b>${w.want}</b>".`).join('<br>')}
+        <br><span class="note">${d.explain}</span>`;
+      completed.delete(`b-${i}`);
+    }
+    updateScore();
+  }
+
+  function showB(i) {
+    const d = drillsB[i];
+    d.accepted.forEach((accSet, j) => {
+      document.getElementById(`b-${i}-${j}`).value = accSet[0];
+    });
+    const fb = document.getElementById(`fb-b-${i}`);
+    fb.className = "feedback show ok";
+    fb.innerHTML = `<span class="label">▸ Model answer shown</span>${d.explain}`;
+  }
+
+  function resetB(i) {
+    const d = drillsB[i];
+    d.accepted.forEach((_, j) => {
+      document.getElementById(`b-${i}-${j}`).value = "";
+    });
+    document.getElementById(`fb-b-${i}`).classList.remove("show");
+    const status = document.getElementById(`status-b-${i}`);
+    status.className = "drill-status"; status.textContent = "Pending";
+    completed.delete(`b-${i}`);
+    updateScore();
+  }
+
+  // ===== SCORE =====
+  const completed = new Set();
+  const totalItems = drillsA.length + drillsB.length;
+  function updateScore() {
+    const n = completed.size;
+    document.getElementById("scoreText").textContent = `${n} / ${totalItems}`;
+    document.getElementById("progressBar").style.width = `${(n/totalItems)*100}%`;
+    const status = document.getElementById("statusText");
+    if (n === 0) status.textContent = "Awaiting first answer…";
+    else if (n < totalItems/2) status.textContent = "Tuning the tenses…";
+    else if (n < totalItems) status.textContent = "Strong work — keep going.";
+    else status.textContent = "★ Tense and move locked in.";
+  }
+
+  // ===== FINAL =====
+  function analyzeFinal() {
+    const m1 = document.getElementById("m1").value.trim();
+    const m2 = document.getElementById("m2").value.trim();
+    const m3 = document.getElementById("m3").value.trim();
+    const m4 = document.getElementById("m4").value.trim();
+    const fb = document.getElementById("finalFeedback");
+
+    if (!m1 || !m2 || !m3 || !m4) {
+      fb.className = "feedback show bad";
+      fb.innerHTML = `<span class="label">▸ Incomplete</span>Write something for all four moves before submitting.`;
+      return;
+    }
+
+    const checks = [
+      checkPlan(m1),
+      checkResults(m2),
+      checkActions(m3),
+      checkFuture(m4)
+    ];
+
+    const total = checks.reduce((a, c) => a + c.score, 0);
+
+    let verdict, cls;
+    if (total >= 13) { verdict = "★ READY TO PUBLISH"; cls = "ok"; }
+    else if (total >= 8) { verdict = "⚠ NEEDS A SECOND PASS"; cls = "bad"; }
+    else { verdict = "✗ REVIEW THE TENSE MAP"; cls = "bad"; }
+
+    fb.className = `feedback show ${cls}`;
+    fb.style.background = "var(--paper)";
+    fb.style.color = "var(--ink)";
+    fb.innerHTML = `
+      <span class="label">▸ Editor's notes — ${verdict} · ${total}/16</span>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:10px 0;">
+        ${checks.map((c) => `
+          <div style="border:1px solid var(--ink);padding:10px 12px;background:var(--paper-2);">
+            <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;color:var(--indigo);text-transform:uppercase;margin-bottom:4px;">${c.name} · ${c.score}/4</div>
+            <div style="font-size:13px;">${c.msg}</div>
+          </div>
+        `).join('')}
+      </div>
+      <details style="margin-top:12px;">
+        <summary style="cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);">▸ View editor's model</summary>
+        <div style="margin-top:12px;font-family:'Fraunces',serif;font-style:italic;font-size:15px;line-height:1.65;background:var(--paper-2);padding:14px 16px;border-left:3px solid var(--indigo);">
+          <b>Plan (simple present / future).</b> At PT Hijau Nusantara, we believe that responsible packaging is a shared responsibility. Our goal is to make 100% of our packaging recyclable by 2030.<br><br>
+          <b>Results (present perfect).</b> Since 2021, we have moved 65% of our packaging to recyclable materials, and we have collected over 40 million used plastic bottles through our return programs.<br><br>
+          <b>Past / Current Actions (present continuous + past).</b> Today, our teams are partnering with 200 waste banks across Java and are running consumer return programs in supermarkets and schools. In 2021, we launched our first bottle-return scheme in Yogyakarta with five local partners.<br><br>
+          <b>Future Actions (future).</b> By 2027, we will expand our network to Sumatra and Sulawesi, and we will launch refill stations in 50 cities across Indonesia.
+        </div>
+      </details>
+    `;
+  }
+
+  function checkPlan(text) {
+    const t = text.toLowerCase();
+    let score = 0;
+    const hasGoalWord = /\b(aim|aims|goal|commit|commits|believe|believes|seek|seeks)\b/.test(t);
+    const hasTargetYear = /\bby\s+20\d{2}\b|\b20(30|32|35|40|50)\b/.test(t);
+    const hasTarget = /100\s*%|recyclable|carbon|net.?zero|sustainable|packaging/.test(t);
+    const hasWrongTense = /\b(have\s+\w+ed|has\s+\w+ed)\b|\b(is|are)\s+\w+ing\b/.test(t);
+
+    if (hasGoalWord) score += 1;
+    if (hasTargetYear) score += 1;
+    if (hasTarget) score += 1;
+    if (!hasWrongTense) score += 1;
+
+    let msg = "";
+    if (score === 4) msg = "✓ Clear plan: simple present/future tense, measurable target, target year.";
+    else {
+      let needs = [];
+      if (!hasGoalWord) needs.push("a goal word ('aim', 'goal')");
+      if (!hasTargetYear) needs.push("a target year (e.g. 'by 2030')");
+      if (!hasTarget) needs.push("the measurable target (100% recyclable)");
+      if (hasWrongTense) needs.push("use simple present/future, NOT present perfect or continuous");
+      msg = `⚠ ${needs.join(', ')}.`;
+    }
+    return { name: "Move 01 · Plan", score, msg };
+  }
+
+  function checkResults(text) {
+    const t = text.toLowerCase();
+    let score = 0;
+    const hasHave = /\b(have|has)\s+\w+/.test(t);
+    const hasNumber = /\b(65|40\s*million|2021)\b|\b\d+%\b|\b\d+\s*percent\b/.test(t);
+    const hasSince = /\bsince\s+20\d{2}\b/.test(t);
+    const hasWrongTense = /\bwill\b|\bgoing to\b|\b(is|are)\s+\w+ing\b/.test(t);
+
+    if (hasHave) score += 1;
+    if (hasNumber) score += 1;
+    if (hasSince) score += 1;
+    if (!hasWrongTense) score += 1;
+
+    let msg = "";
+    if (score === 4) msg = "✓ Strong results: present perfect + numbers + 'since YEAR'.";
+    else {
+      let needs = [];
+      if (!hasHave) needs.push("present perfect ('we have...')");
+      if (!hasNumber) needs.push("the result numbers (65%, 40 million)");
+      if (!hasSince) needs.push("'since 2021' time anchor");
+      if (hasWrongTense) needs.push("use present perfect, NOT future or continuous");
+      msg = `⚠ ${needs.join(', ')}.`;
+    }
+    return { name: "Move 02 · Results", score, msg };
+  }
+
+  function checkActions(text) {
+    const t = text.toLowerCase();
+    let score = 0;
+    const hasIng = /\b(is|are)\s+\w+ing\b/.test(t);
+    const hasPartner = /\b(waste\s*bank|partner|consumer|community|java|programme|program|return)\b/.test(t);
+    const hasNumber = /\b\d+\b/.test(t);
+    const hasWrongTense = /\bwill\b|\bgoing to\b|\b(have|has)\s+\w+ed\b/.test(t);
+
+    if (hasIng) score += 2;
+    if (hasPartner) score += 1;
+    if (hasNumber || !hasWrongTense) score += 1;
+
+    let msg = "";
+    if (score === 4) msg = "✓ Concrete current action: present continuous + named partner + numbers.";
+    else {
+      let needs = [];
+      if (!hasIng) needs.push("present continuous ('we are working...')");
+      if (!hasPartner) needs.push("a named partner/programme (e.g. waste banks)");
+      if (!hasNumber) needs.push("a concrete number (200, etc.)");
+      if (hasWrongTense) needs.push("use present continuous, NOT future or present perfect");
+      msg = `⚠ ${needs.join(', ')}.`;
+    }
+    return { name: "Move 03 · Actions", score, msg };
+  }
+
+  function checkFuture(text) {
+    const t = text.toLowerCase();
+    let score = 0;
+    const hasWill = /\bwill\b|\bgoing to\b/.test(t);
+    const hasFutureYear = /\bby\s+202[5-9]\b|\bby\s+20(30|32|35|40|50)\b|\b202[7-9]\b/.test(t);
+    const hasRegion = /\b(sumatra|sulawesi|java|bali|kalimantan|papua|maluku|nusa\s+tenggara|cities)\b/.test(t);
+    const hasWrongTense = /\b(have|has)\s+\w+ed\b|\b(is|are)\s+\w+ing\b/.test(t);
+
+    if (hasWill) score += 1;
+    if (hasFutureYear) score += 1;
+    if (hasRegion) score += 1;
+    if (!hasWrongTense) score += 1;
+
+    let msg = "";
+    if (score === 4) msg = "✓ Clear future: 'will' + future year + named region.";
+    else {
+      let needs = [];
+      if (!hasWill) needs.push("future tense ('we will...')");
+      if (!hasFutureYear) needs.push("a future year (by 2027, etc.)");
+      if (!hasRegion) needs.push("named regions (Sumatra, Sulawesi)");
+      if (hasWrongTense) needs.push("use future, NOT present perfect or continuous");
+      msg = `⚠ ${needs.join(', ')}.`;
+    }
+    return { name: "Move 04 · Future", score, msg };
+  }
+
+  function clearFinal() {
+    ["m1","m2","m3","m4"].forEach(id => document.getElementById(id).value = "");
+    document.getElementById("finalFeedback").classList.remove("show");
+  }
+
+  // ===== CLOCK =====
+  function tick() {
+    const now = new Date();
+    document.getElementById("clock").textContent = now.toTimeString().slice(0,8);
+  }
+  setInterval(tick, 1000); tick();
+  document.getElementById("footerDate").textContent =
+    new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }).toUpperCase();
+
+  updateScore();
+</script>
+</body>
+</html>
